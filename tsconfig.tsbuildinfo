@@ -1,1 +1,1 @@
-{"root":["./src/app.ts","./src/server.ts","./src/socket/socket.ts"],"version":"5.9.0-dev"}
+{"root":["./src/app.ts","./src/server.ts","./src/db/prisma.ts","./src/routes/poll.ts","./src/routes/user.ts","./src/routes/vote.ts","./src/socket/socket.ts"],"version":"5.9.0-dev"}
