@@ -27,7 +27,7 @@ model User {
 model Poll {
   id          String       @id @default(cuid())
   question    String
-  isPublished Boolean
+  isPublished Boolean      @default(false)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   creator     User         @relation(name: "UserPolls", fields: [creatorId], references: [id])
