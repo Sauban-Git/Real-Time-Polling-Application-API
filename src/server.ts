@@ -1,13 +1,13 @@
-import express from "express";
-import http from "http";
+import { createServer } from "http";
+import { app } from "./app.js";
+import { setupSocket } from "./socket/socket.js";
 
-const port = Number(process.env.PORT) | 3000;
+const httpServer = createServer(app);
 
-const app = express();
-app.use(express.json());
+const io = setupSocket(httpServer);
 
-const server = http.createServer(app);
+app.set("io", io);
 
-server.listen(port, () => {
-  console.log("Listening on port: ", port);
+httpServer.listen(3000, () => {
+  console.log("🚀 Server is running on port 3000");
 });
