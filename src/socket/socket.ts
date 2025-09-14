@@ -9,10 +9,10 @@ export const setupSocket = (server: HttpServer) => {
   });
 
   io.on("connection", (socket: Socket) => {
-    console.log(socket.id, " got connected");
+    console.log(socket.id, " connected");
 
     socket.on("disconnect", (listener) => {
-      console.log(socket.id, " got disconnect: ", listener);
+      console.log(socket.id, " got disconnect for reason: ", listener);
     });
   });
 };
