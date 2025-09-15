@@ -19,7 +19,7 @@ router.post("/", async (req: Request, res: Response) => {
     const io = req.app.get("io") as SocketIOServer;
 
     const updatedResult = await getUpdatedResult(pollOptionId);
-    io.emit("vote:new", updatedResult);
+    io.to(`poll-${updatedResult?.id}`).emit("vote:new", updatedResult);
 
     return res.status(200).json({
       vote,
