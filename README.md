@@ -92,7 +92,7 @@ Base URL: `http://localhost:3000` (configurable)
     "question": "Which is your favorite color?",
     "isPublished": true,
     "creatorId": 1,
-    "options": [ "Red", Blue" , Green" ]
+    "options": [ "Red", "Blue" , "Green" ]
   }
   ```
 
