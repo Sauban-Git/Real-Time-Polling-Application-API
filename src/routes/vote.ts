@@ -5,8 +5,8 @@ import { Server as SocketIOServer } from "socket.io";
 const router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
-  const { pollOptionId } = req.body;
-  const voterId: string = "cmfkogtmz0000sbe3aaud5toh";
+  const { pollOptionId, voterId }: { pollOptionId: string; voterId: string } =
+    req.body;
 
   try {
     const vote = await prisma.vote.create({

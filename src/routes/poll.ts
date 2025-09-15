@@ -35,9 +35,11 @@ router.get("/", async (req: Request, res: Response) => {
 });
 
 router.post("/", async (req: Request, res: Response) => {
-  const { question, pollOptions }: { question: string; pollOptions: string[] } =
-    req.body;
-  const creatorId: string = "cmfkntaay0000sb8t9towu40o";
+  const {
+    question,
+    pollOptions,
+    creatorId,
+  }: { question: string; pollOptions: string[]; creatorId: string } = req.body;
   try {
     const poll = await prisma.poll.create({
       data: {
