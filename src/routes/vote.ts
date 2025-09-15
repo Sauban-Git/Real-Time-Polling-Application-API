@@ -32,8 +32,8 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/", async (req: Request, res: Response) => {
-  const pollId: string = "cmfknw8tc0001sbfoj1qajjfo";
+router.get("/:pollId", async (req: Request, res: Response) => {
+  const pollId: string = req.params.pollId || "";
 
   try {
     const pollWithVoteCounts = await prisma.poll.findUnique({
