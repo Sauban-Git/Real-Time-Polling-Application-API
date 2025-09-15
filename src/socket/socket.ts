@@ -24,19 +24,3 @@ export const setupSocket = (server: HttpServer) => {
 
   return io;
 };
-
-const getUpdatedResult = async (pollOptionsId: string) => {
-  const result = await prisma.pollOption.findUnique({
-    where: {
-      id: pollOptionsId,
-    },
-    select: {
-      poll: {
-        include: {
-          pollOptions: true,
-        },
-      },
-    },
-  });
-  return result?.poll;
-};

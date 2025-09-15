@@ -92,9 +92,11 @@ Base URL: `http://localhost:3000` (configurable)
     "question": "Which is your favorite color?",
     "isPublished": true,
     "creatorId": 1,
-    "options": [ "Red", "Blue" , "Green" ]
+    "options": ["Red", "Blue", "Green"]
   }
   ```
+
+  # Notes: creatorId is same as of user id from user
 
 ## Votes
 
@@ -109,6 +111,8 @@ Base URL: `http://localhost:3000` (configurable)
     "voterId": 3
   }
   ```
+
+  # Notes: voterId is same as of user id from user
 
 - `GET /vote/:id`\
   Get voting results for poll with id.
