@@ -1,5 +1,6 @@
 import { Server as HttpServer } from "http";
 import { Server as SocketIOServer, Socket } from "socket.io";
+import { prisma } from "../db/prisma.js";
 
 export const setupSocket = (server: HttpServer) => {
   const io = new SocketIOServer(server, {
@@ -11,8 +12,31 @@ export const setupSocket = (server: HttpServer) => {
   io.on("connection", (socket: Socket) => {
     console.log(socket.id, " connected");
 
-    socket.on("disconnect", (listener) => {
-      console.log(socket.id, " got disconnect for reason: ", listener);
+    socket.on("joinPoll", (pollId: string) => {
+      socket.join(`poll-${pollId}`);
+      console.log(`Socket-${socket.id} joined poll-${pollId}`);
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log(socket.id, " got disconnect for reason: ", reason);
     });
   });
+
+  return io;
+};
+
+const getUpdatedResult = async (pollOptionsId: string) => {
+  const result = await prisma.pollOption.findUnique({
+    where: {
+      id: pollOptionsId,
+    },
+    select: {
+      poll: {
+        include: {
+          pollOptions: true,
+        },
+      },
+    },
+  });
+  return result?.poll;
 };

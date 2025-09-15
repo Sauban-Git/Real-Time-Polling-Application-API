@@ -1,11 +1,12 @@
 import { Router, type Request, type Response } from "express";
 import { prisma } from "../db/prisma.js";
+import { Server as SocketIOServer } from "socket.io";
 
 const router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
   const { pollOptionId } = req.body;
-  const voterId: string = "cmfjut5a10000sb7mxd89bqz1";
+  const voterId: string = "cmfkogtmz0000sbe3aaud5toh";
 
   try {
     const vote = await prisma.vote.create({
@@ -14,6 +15,11 @@ router.post("/", async (req: Request, res: Response) => {
         pollOptionId,
       },
     });
+
+    const io = req.app.get("io") as SocketIOServer;
+
+    const updatedResult = await getUpdatedResult(pollOptionId);
+    io.emit("vote:new", updatedResult);
 
     return res.status(200).json({
       vote,
@@ -27,7 +33,7 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 router.get("/", async (req: Request, res: Response) => {
-  const pollId: string = "cmfjx7rs50001sb878d8i9ggk";
+  const pollId: string = "cmfknw8tc0001sbfoj1qajjfo";
 
   try {
     const pollWithVoteCounts = await prisma.poll.findUnique({
@@ -62,5 +68,40 @@ router.get("/", async (req: Request, res: Response) => {
     });
   }
 });
+
+const getUpdatedResult = async (pollOptionsId: string) => {
+  try {
+    const result = await prisma.pollOption.findUnique({
+      where: {
+        id: pollOptionsId,
+      },
+      select: {
+        poll: {
+          include: {
+            pollOptions: {
+              select: {
+                id: true,
+                text: true,
+                votes: {
+                  select: {
+                    id: true,
+                  },
+                },
+                _count: {
+                  select: {
+                    votes: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+    return result?.poll;
+  } catch (error) {
+    console.log("Error while fetching pollOptions result: ", error);
+  }
+};
 
 export { router as voteRouter };
