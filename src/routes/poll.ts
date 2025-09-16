@@ -1,5 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import { prisma } from "../db/prisma.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import type { AuthRequest } from "../types/types.js";
 
 const router = Router();
 
@@ -34,12 +36,10 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
-  const {
-    question,
-    pollOptions,
-    creatorId,
-  }: { question: string; pollOptions: string[]; creatorId: string } = req.body;
+router.post("/", authMiddleware, async (req: Request, res: Response) => {
+  const { question, pollOptions }: { question: string; pollOptions: string[] } =
+    req.body;
+  const creatorId = (req as AuthRequest).payload?.userId;
   try {
     const poll = await prisma.poll.create({
       data: {

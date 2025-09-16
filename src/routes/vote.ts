@@ -1,12 +1,15 @@
 import { Router, type Request, type Response } from "express";
 import { prisma } from "../db/prisma.js";
 import { Server as SocketIOServer } from "socket.io";
+import type { AuthRequest } from "../types/types.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-router.post("/", async (req: Request, res: Response) => {
-  const { pollOptionId, voterId }: { pollOptionId: string; voterId: string } =
-    req.body;
+router.post("/", authMiddleware, async (req: Request, res: Response) => {
+  const { pollOptionId }: { pollOptionId: string } = req.body;
+
+  const voterId = (req as AuthRequest).payload.userId;
 
   try {
     const vote = await prisma.vote.create({
@@ -27,7 +30,7 @@ router.post("/", async (req: Request, res: Response) => {
   } catch (error) {
     console.log("Error while creating vote: ", error);
     return res.status(500).json({
-      error: "Error while voting.",
+      error: "Error while voting. Recheck Option choosen",
     });
   }
 });

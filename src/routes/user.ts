@@ -1,6 +1,8 @@
 import { Router, type Request, type Response } from "express";
 import { prisma } from "../db/prisma.js";
 import argon2 from "argon2";
+import jwt from "jsonwebtoken";
+import { JWT_EXPIRY, JWT_SECRET } from "../config/constants.js";
 
 const router = Router();
 
@@ -49,9 +51,15 @@ router.post("/", async (req: Request, res: Response) => {
           passwordHash,
         },
       });
+      const token = jwt.sign(
+        { userId: user.id, email: user.email },
+        JWT_SECRET as jwt.Secret,
+        { expiresIn: JWT_EXPIRY } as jwt.SignOptions,
+      );
 
       return res.status(200).json({
         user,
+        token,
         message: "Successful creating user!",
       });
     } else {
