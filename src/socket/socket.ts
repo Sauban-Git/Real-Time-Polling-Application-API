@@ -1,12 +1,29 @@
 import { Server as HttpServer } from "http";
 import { Server as SocketIOServer, Socket } from "socket.io";
-import { prisma } from "../db/prisma.js";
+import { JWT_SECRET } from "../config/constants.js";
+import type { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const setupSocket = (server: HttpServer) => {
   const io = new SocketIOServer(server, {
     cors: {
       origin: "*",
     },
+  });
+
+  io.use((socket, next) => {
+    const authorization = socket.handshake.headers.authorization;
+    if (!authorization || !authorization.startsWith("Bearer ")) {
+      next(new Error("Invalid token or no token provided"));
+    }
+    const token = authorization?.split(" ")[1] || "";
+    try {
+      jwt.verify(token, JWT_SECRET) as JwtPayload;
+      next();
+    } catch (error) {
+      console.log("Error while jwt verify: ", error);
+      next(new Error("Invalid token.."));
+    }
   });
 
   io.on("connection", (socket: Socket) => {
