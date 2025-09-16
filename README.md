@@ -97,8 +97,6 @@ Base URL: `http://localhost:3000` (configurable)
   }
   ```
 
-  ### Notes: creatorId is same as of user id from user
-
 ## Votes
 
 - `POST /vote`\
@@ -111,8 +109,6 @@ Base URL: `http://localhost:3000` (configurable)
     "optionId": 7
   }
   ```
-
-  ### Notes: voterId is same as of user id from user
 
 - `GET /vote/:id`\
   Get voting results for poll with id.
