@@ -14,7 +14,7 @@ export const setupSocket = (server: HttpServer) => {
   io.use((socket, next) => {
     const authorization = socket.handshake.headers.authorization;
     if (!authorization || !authorization.startsWith("Bearer ")) {
-      next(new Error("Invalid token or no token provided"));
+      return next(new Error("Invalid token or no token provided"));
     }
     const token = authorization?.split(" ")[1] || "";
     try {
@@ -22,7 +22,7 @@ export const setupSocket = (server: HttpServer) => {
       next();
     } catch (error) {
       console.log("Error while jwt verify: ", error);
-      next(new Error("Invalid token.."));
+      return next(new Error("Invalid token.."));
     }
   });
 
