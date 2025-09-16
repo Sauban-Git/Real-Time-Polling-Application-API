@@ -80,6 +80,8 @@ Base URL: `http://localhost:3000` (configurable)
   }
   ```
 
+## Don't forget to Set authorization headers after this
+
 ## Polls
 
 - `POST /poll/`\
@@ -91,7 +93,6 @@ Base URL: `http://localhost:3000` (configurable)
   {
     "question": "Which is your favorite color?",
     "isPublished": true,
-    "creatorId": 1,
     "options": ["Red", "Blue", "Green"]
   }
   ```
@@ -107,8 +108,7 @@ Base URL: `http://localhost:3000` (configurable)
 
   ```json
   {
-    "optionId": 7,
-    "voterId": 3
+    "optionId": 7
   }
   ```
 
@@ -185,7 +185,7 @@ node prisma/seed.js   # optional
 
 - Passwords hashed with argon2.
 - Validate inputs with `zod` or `express-validator`.
-- Consider rate limiting and CSRF protection.
+- JWT for authentication and authorization.
 
 ---
 
